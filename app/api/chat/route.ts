@@ -372,6 +372,7 @@ export async function POST(req: Request) {
           tools: tools,
           stream: true,
           parallel_tool_calls: false,
+          temperature: 0,
         });
 
         let fullText = "";
