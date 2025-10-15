@@ -344,6 +344,14 @@ export async function POST(req: Request) {
       try {
         const desktop = await getDesktop(sandboxId);
 
+        // Wysyłanie temp URL w trakcie wykonywania taska
+        const streamUrl = desktop.stream.getUrl();
+        await sendEvent({
+          type: "temp-url-available",
+          tempUrl: streamUrl,
+          sandboxId: desktop.sandboxId,
+        });
+
       const chatHistory: any[] = [
         {
           role: "system",
@@ -372,6 +380,7 @@ export async function POST(req: Request) {
           tools: tools,
           stream: true,
           parallel_tool_calls: false,
+          temperature: 0,
         });
 
         let fullText = "";

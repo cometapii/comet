@@ -14,6 +14,7 @@ type ChatState = {
   messages: Message[];
   input: string;
   status: "ready" | "streaming" | "error";
+  tempUrl: string | null;
 };
 
 type ChatAction = 
@@ -21,7 +22,8 @@ type ChatAction =
   | { type: "ADD_MESSAGE"; payload: Message }
   | { type: "UPDATE_MESSAGE"; payload: { id: string; updates: Partial<Message> } }
   | { type: "SET_STATUS"; payload: ChatState["status"] }
-  | { type: "RESET_INPUT" };
+  | { type: "RESET_INPUT" }
+  | { type: "SET_TEMP_URL"; payload: string | null };
 
 function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
@@ -40,6 +42,8 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return { ...state, status: action.payload };
     case "RESET_INPUT":
       return { ...state, input: "" };
+    case "SET_TEMP_URL":
+      return { ...state, tempUrl: action.payload };
     default:
       return state;
   }
@@ -58,6 +62,7 @@ export function useStreamChat(options: UseStreamChatOptions) {
     messages: [],
     input: "",
     status: "ready",
+    tempUrl: null,
   });
 
   const messagesRef = useRef<Message[]>([]);
@@ -232,6 +237,13 @@ export function useStreamChat(options: UseStreamChatOptions) {
                   });
                 });
               }
+            } else if (data.type === "temp-url-available") {
+              flushSync(() => {
+                dispatch({
+                  type: "SET_TEMP_URL",
+                  payload: data.tempUrl,
+                });
+              });
             }
           } catch (e) {
             if (!(e instanceof SyntaxError)) throw e;
@@ -278,6 +290,7 @@ export function useStreamChat(options: UseStreamChatOptions) {
     handleInputChange,
     handleSubmit,
     status: state.status,
+    tempUrl: state.tempUrl,
     stop,
     append,
     setMessages: (messages: Message[]) => {
