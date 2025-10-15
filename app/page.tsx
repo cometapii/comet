@@ -27,7 +27,6 @@ export default function Chat() {
     handleInputChange,
     handleSubmit,
     status,
-    tempUrl,
     stop: stopGeneration,
     append,
   } = useCustomChat({
@@ -161,17 +160,6 @@ export default function Chat() {
             <div ref={desktopEndRef} className="pb-2" />
           </div>
 
-          {tempUrl && (
-            <div className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 border-t border-blue-200 dark:border-blue-800">
-              <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">
-                Temp URL:
-              </div>
-              <div className="text-xs text-blue-800 dark:text-blue-200 break-all">
-                {tempUrl}
-              </div>
-            </div>
-          )}
-
           {messages.length === 0 && (
             <PromptSuggestions
               disabled={isInitializing}
@@ -247,17 +235,6 @@ export default function Chat() {
           ))}
           <div ref={mobileEndRef} className="pb-2" />
         </div>
-
-        {tempUrl && (
-          <div className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 border-t border-blue-200 dark:border-blue-800">
-            <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">
-              Temp URL:
-            </div>
-            <div className="text-xs text-blue-800 dark:text-blue-200 break-all">
-              {tempUrl}
-            </div>
-          </div>
-        )}
 
         {messages.length === 0 && (
           <PromptSuggestions
